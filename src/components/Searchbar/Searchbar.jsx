@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import {
@@ -10,44 +10,82 @@ import {
 } from './Searchbar.styled';
 import { BsSearch } from 'react-icons/bs';
 
-export class Searchbar extends Component {
-  state = {
-    value: '',
+export const Searchbar = ({ onSearch }) => {
+  const [value, setValue] = useState('');
+
+  const handleChange = ({ target: { value } }) => {
+    setValue(value);
   };
 
-  handleChange = ({ target: { value } }) => {
-    this.setState({ value });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    if (!this.state.value.trim()) {
+    if (!value.trim()) {
       e.target.reset();
       return toast.error('Please enter search query');
     }
-    this.props.onSearch(this.state.value);
-    this.setState({ value: '' });
+    onSearch(value);
+    setValue('');
     e.target.reset();
   };
 
-  render() {
-    return (
-      <Header>
-        <SearchForm onSubmit={this.handleSubmit}>
-          <SearchFormButton type="submit">
-            <BsSearch />
-            <SearchFormButtonLabel>Search</SearchFormButtonLabel>
-          </SearchFormButton>
+  return (
+    <Header>
+      <SearchForm onSubmit={handleSubmit}>
+        <SearchFormButton type="submit">
+          <BsSearch />
+          <SearchFormButtonLabel>Search</SearchFormButtonLabel>
+        </SearchFormButton>
 
-          <SearchFormInput
-            type="text"
-            autocomplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            onChange={this.handleChange}
-          />
-        </SearchForm>
-      </Header>
-    );
-  }
-}
+        <SearchFormInput
+          type="text"
+          autocomplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          onChange={handleChange}
+        />
+      </SearchForm>
+    </Header>
+  );
+};
+
+// export class Searchbar extends Component {
+//   state = {
+//     value: '',
+//   };
+
+//   handleChange = ({ target: { value } }) => {
+//     this.setState({ value });
+//   };
+
+//   handleSubmit = e => {
+//     e.preventDefault();
+//     if (!this.state.value.trim()) {
+//       e.target.reset();
+//       return toast.error('Please enter search query');
+//     }
+//     this.props.onSearch(this.state.value);
+//     this.setState({ value: '' });
+//     e.target.reset();
+//   };
+
+//   render() {
+//     return (
+//       <Header>
+//         <SearchForm onSubmit={this.handleSubmit}>
+//           <SearchFormButton type="submit">
+//             <BsSearch />
+//             <SearchFormButtonLabel>Search</SearchFormButtonLabel>
+//           </SearchFormButton>
+
+//           <SearchFormInput
+//             type="text"
+//             autocomplete="off"
+//             autoFocus
+//             placeholder="Search images and photos"
+//             onChange={this.handleChange}
+//           />
+//         </SearchForm>
+//       </Header>
+//     );
+//   }
+// }
