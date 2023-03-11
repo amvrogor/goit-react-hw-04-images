@@ -8,7 +8,7 @@ export const Modal = ({ children, onClose }) => {
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  });
 
   const handleKeyDown = e => {
     if (e.code === 'Escape') {
