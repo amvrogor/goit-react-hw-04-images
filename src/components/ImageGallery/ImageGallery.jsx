@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { Loader } from 'components/Loader/Loader';
@@ -14,31 +14,23 @@ const Status = {
   REJECTED: 'rejected',
 };
 
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
-  return ref.current;
-}
-
-export const ImageGallery = ({ value }) => {
+export const ImageGallery = ({ value, page, setPage }) => {
   const [hits, setHits] = useState([]);
   const [error, setError] = useState('');
   const [status, setStatus] = useState(Status.IDLE);
-  const [page, setPage] = useState(1);
   const [totalHits, setTotalHits] = useState(0);
-
-  const prevValue = usePrevious(value);
 
   useEffect(() => {
     if (!value) {
       return;
     }
 
-    setStatus(Status.PENDING);
+    if (page === 1) {
+      setHits([]);
+      setTotalHits(0);
+    }
 
-    if (prevValue !== value) setPage(prev => (prev = 1));
+    setStatus(Status.PENDING);
 
     pixaBayAPI(value.trim().toLowerCase(), page)
       .then(data => {
@@ -49,13 +41,9 @@ export const ImageGallery = ({ value }) => {
           return toast.error(
             'Sorry, there are no images matching your search query. Please try again.'
           );
-        }
-        if (prevValue !== value) {
-          setHits([...data.hits]);
-          setTotalHits(data.totalHits);
-          setStatus(Status.RESOLVED);
         } else {
           setHits(prevHits => [...prevHits, ...data.hits]);
+          setTotalHits(data.totalHits);
           setStatus(Status.RESOLVED);
         }
       })

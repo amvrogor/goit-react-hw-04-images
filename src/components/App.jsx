@@ -7,16 +7,18 @@ import { Searchbar } from './Searchbar/Searchbar';
 
 export const App = () => {
   const [searchText, setSearchText] = useState('');
+  const [page, setPage] = useState(1);
 
-  const handleSubmit = searchText => {
-    setSearchText(searchText);
+  const handleSubmit = text => {
+    if (text !== searchText) setPage(1);
+    setSearchText(text);
   };
 
   return (
     <Layout>
       <Toaster />
       <Searchbar onSearch={handleSubmit} />
-      <ImageGallery value={searchText} />
+      <ImageGallery value={searchText} page={page} setPage={setPage} />
       <GlobalStyle />
     </Layout>
   );
